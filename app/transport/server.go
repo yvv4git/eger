@@ -3,7 +3,7 @@ package transport
 import (
 	"fmt"
 	gorillaMux "github.com/gorilla/mux"
-	"github.com/yvv4git/eger/internal/config"
+	"github.com/yvv4git/eger/app/internal/config"
 	"net/http"
 )
 

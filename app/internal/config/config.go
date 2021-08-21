@@ -1,10 +1,10 @@
 package config
 
 const (
-	webHost                  = "localhost"
+	webHost                  = "0.0.0.0"
 	webPort                  = "8080"
 	jaegerServiceName        = "example"
-	jaegerAgentHost          = "localhost"
+	jaegerAgentHost          = "jaeger"
 	jaegerAgentPort          = "6831"
 	jaegerSamplingPercentage = 0.91
 )

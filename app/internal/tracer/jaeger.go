@@ -7,7 +7,7 @@ import (
 	jaegercfg "github.com/uber/jaeger-client-go/config"
 	jaegerlog "github.com/uber/jaeger-client-go/log"
 	"github.com/uber/jaeger-lib/metrics"
-	"github.com/yvv4git/eger/internal/config"
+	"github.com/yvv4git/eger/app/internal/config"
 	"io"
 	"log"
 )

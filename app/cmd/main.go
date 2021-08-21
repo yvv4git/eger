@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"github.com/yvv4git/eger/internal/config"
-	"github.com/yvv4git/eger/internal/tracer"
-	"github.com/yvv4git/eger/transport"
+	"github.com/yvv4git/eger/app/internal/config"
+	"github.com/yvv4git/eger/app/internal/tracer"
+	"github.com/yvv4git/eger/app/transport"
 	"log"
 	"os"
 	"os/signal"
