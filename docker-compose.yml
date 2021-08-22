@@ -4,7 +4,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: ./docker/golang.Dockerfile
+      dockerfile: docker/application.Dockerfile
     hostname: app
     container_name: ex_app
     ports:
@@ -14,6 +14,7 @@ services:
     working_dir: /app
     depends_on:
       - jaeger
+
   jaeger:
     image: jaegertracing/all-in-one
     hostname: jaeger
@@ -27,8 +28,65 @@ services:
     networks:
       - eger
 
+  k6:
+    image: loadimpact/k6:latest
+    hostname: k6
+    container_name: ex_k6
+    networks:
+      - eger
+    ports:
+      - "6565:6565"
+    environment:
+      - K6_OUT=influxdb=http://influxdb:8086/k6
+      - K6_INFLUXDB_USERNAME=admin
+      - K6_INFLUXDB_PASSWORD=12345
+      - K6_INFLUXDB_INSECURE=false
+    volumes:
+      - ./tests:/scripts
+    depends_on:
+      - app
+      - influxdb
+      - grafana
+
+  influxdb:
+    image: influxdb:1.8
+    hostname: influxdb
+    container_name: ex_influxdb
+    networks:
+      - eger
+      - grafana
+    ports:
+      - "8086:8086"
+    environment:
+      - INFLUXDB_DB=k6
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=12345
+    depends_on:
+      - app
+
+  grafana:
+    image: grafana/grafana:latest
+    hostname: grafana
+    container_name: ex_grafana
+    networks:
+      - grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_BASIC_ENABLED=false
+    volumes:
+      - ./config/dashboards:/var/lib/grafana/dashboards
+      - ./config/grafana-dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
+      - ./config/grafana-datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
+    depends_on:
+      - app
+      - influxdb
+
 volumes:
   data:
 
 networks:
   eger:
+  grafana:
